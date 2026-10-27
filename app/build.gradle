@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'es.zona6.auto'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'es.zona6.auto'
+        minSdk 23
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+
+    signingConfigs {
+        propia {
+            storeFile file('zona6.keystore')
+            storePassword 'zona6auto'
+            keyAlias 'zona6'
+            keyPassword 'zona6auto'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.propia
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.car.app:app:1.4.0'
+}

@@ -1,0 +1,45 @@
+name: Compilar APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Compilar
+        run: gradle assembleRelease --no-daemon --stacktrace
+
+      - name: Preparar APK
+        run: cp app/build/outputs/apk/release/app-release.apk Zona6Auto.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Zona6Auto
+          path: Zona6Auto.apk
+
+      - name: Publicar en Releases (enlace fijo de descarga)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete ultima --yes --cleanup-tag || true
+          gh release create ultima Zona6Auto.apk \
+            --target "$GITHUB_SHA" \
+            --title "Zona 6 Auto - última versión" \
+            --notes "Descarga Zona6Auto.apk desde el móvil e instálalo."
