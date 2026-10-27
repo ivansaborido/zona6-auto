@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'es.zona6.juegos'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'es.zona6.juegos'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+    }
+
+    signingConfigs {
+        propia {
+            storeFile file('../app/zona6.keystore')
+            storePassword 'zona6auto'
+            keyAlias 'zona6'
+            keyPassword 'zona6auto'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.propia
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}

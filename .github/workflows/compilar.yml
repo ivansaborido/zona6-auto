@@ -27,19 +27,23 @@ jobs:
         run: gradle assembleRelease --no-daemon --stacktrace
 
       - name: Preparar APK
-        run: cp app/build/outputs/apk/release/app-release.apk Zona6Auto.apk
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk Zona6Auto.apk
+          cp juegos/build/outputs/apk/release/juegos-release.apk MisJuegos.apk
 
       - uses: actions/upload-artifact@v4
         with:
           name: Zona6Auto
-          path: Zona6Auto.apk
+          path: |
+            Zona6Auto.apk
+            MisJuegos.apk
 
       - name: Publicar en Releases (enlace fijo de descarga)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete ultima --yes --cleanup-tag || true
-          gh release create ultima Zona6Auto.apk \
+          gh release create ultima Zona6Auto.apk MisJuegos.apk \
             --target "$GITHUB_SHA" \
-            --title "Zona 6 Auto - última versión" \
-            --notes "Descarga Zona6Auto.apk desde el móvil e instálalo."
+            --title "Última versión (Zona 6 Auto + Mis Juegos)" \
+            --notes "Zona6Auto.apk: panel de centros. MisJuegos.apk: tus juegos HTML en la pantalla del coche (con el coche parado)."
